@@ -6,20 +6,23 @@ import Link from "next/link";
 import React from "react";
 
 const Header = ({ role, balance, connectedAccount }) => {
-  const _connectedAccount =
-    connectedAccount.substring(0, 7) + "..." + connectedAccount.substring(37);
-  const _balance = balance + " ETH";
+  const _connectedAccount = connectedAccount
+    ? connectedAccount.substring(0, 7) + "..." + connectedAccount.substring(connectedAccount.length - 4)
+    : "N/A";
+  const _balance = balance ? `${balance} ETH` : "0 ETH";
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(connectedAccount);
+    if (connectedAccount) {
+      navigator.clipboard.writeText(connectedAccount);
+    }
   };
-  // Open menu
+
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // Close menu
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
@@ -27,24 +30,22 @@ const Header = ({ role, balance, connectedAccount }) => {
   return (
     <AppBar position="static" sx={{ backgroundColor: "yellow", color: "skyblue" }}>
       <Toolbar sx={{ display: "flex" }}>
-        <Avatar alt="Logo" src="../images/ewLogo.png" href="/" sx={{ width: 40, height: 40, marginRight: 10 }} />
+        <Avatar 
+          alt="Pingsphere Logo" 
+          src="/images/pingsphere-logo.png" 
+          sx={{ width: 40, height: 40, marginRight: 2 }} 
+        />
         <div className="header-ele" style={{ marginRight: '50px' }}>
-          {/* <div className="header-ele-links"> */}
           <div className="link-text">
             Role : {role}
           </div>
         </div>
-        {/* </div> */}
         <div className="header-ele" style={{ marginRight: '50px' }}>
           <div className="header-ele-links">
             <Link
               href={{
                 pathname: "/register",
-                query: {
-                  connectedAccount: connectedAccount,
-                  balance: balance,
-                  role: role,
-                },
+                query: { connectedAccount, balance, role },
               }}
               className="link-text"
             >
@@ -57,11 +58,7 @@ const Header = ({ role, balance, connectedAccount }) => {
             <Link
               href={{
                 pathname: "/my-rides",
-                query: {
-                  connectedAccount: connectedAccount,
-                  balance: balance,
-                  role: role,
-                },
+                query: { connectedAccount, balance, role },
               }}
               className="link-text"
             >
@@ -71,9 +68,7 @@ const Header = ({ role, balance, connectedAccount }) => {
         </div>
         <div className="header-ele" style={{ flexGrow: 1 }}>
           <div className="header-ele-links">
-            <div className="link-text">
-              Balance : {_balance}
-            </div>
+            <div className="link-text">Balance : {_balance}</div>
           </div>
         </div>
 
@@ -89,24 +84,17 @@ const Header = ({ role, balance, connectedAccount }) => {
           <MenuIcon />
         </IconButton>
 
-
         <Menu
           id="menu-appbar"
           anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
           keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
           <MenuItem onClick={handleMenuClose}>
-            <Tooltip title={connectedAccount} >
+            <Tooltip title={connectedAccount || ""}>
               <Typography sx={{ width: "100%" }}>
                 My Profile: {_connectedAccount}
               </Typography>
@@ -117,14 +105,14 @@ const Header = ({ role, balance, connectedAccount }) => {
               </Button>
             </Tooltip>
           </MenuItem>
-          <MenuItem sx={{ "& a": { color: "inherit", textDecoration: "none" } }} onClick={handleMenuClose}>
-            <Link href="https://alchemy.com" passHref>
-              <Typography variant="inherit">Add Balance</Typography>
+          <MenuItem onClick={handleMenuClose}>
+            <Link href="https://alchemy.com" passHref legacyBehavior>
+              <Typography variant="inherit" component="a">Add Balance</Typography>
             </Link>
           </MenuItem>
-          <MenuItem sx={{ "& a": { color: "inherit", textDecoration: "none" } }} onClick={handleMenuClose}>
-            <Link href="/" passHref>
-              <Typography variant="inherit">Log Out</Typography>
+          <MenuItem onClick={handleMenuClose}>
+            <Link href="/" passHref legacyBehavior>
+              <Typography variant="inherit" component="a">Log Out</Typography>
             </Link>
           </MenuItem>
         </Menu>

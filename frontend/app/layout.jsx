@@ -11,8 +11,8 @@ export const metadata = {
     icon: [
       {
         media: '(prefers-color-scheme: light)',
-        url: '/images/ewLogo.ico',
-        href: '/images/ewLogo.ico',
+        url: '/images/pingsphere-logo.png',
+        href: '/images/pingsphere-logo.png',
       },
 
     ],
